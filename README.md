@@ -1,6 +1,10 @@
 # Scaling In-Context Online Learning Capability of LLMs via Cross-Episode Meta-RL
 
-[![arXiv](https://img.shields.io/badge/arXiv-View%20Paper-b31b1b.svg?logo=arxiv)](https://arxiv.org/abs/2602.04089)
+<p align="center">
+  <a href="https://arxiv.org/abs/2602.04089">
+    <img src="https://img.shields.io/badge/arXiv-View%20Paper-b31b1b.svg?logo=arxiv" alt="arXiv">
+  </a>
+</p>
 
 Large language models excel when all task-relevant information is available upfront, but many real-world decision-making problems are inherently online—requiring interaction, delayed feedback, and exploration over time. While in-context learning enables adaptation without weight updates, existing LLMs often struggle to reliably learn from interaction experience alone.
 
@@ -39,20 +43,6 @@ uv pip install -e .[verl]
 cd ../..
 uv pip install -e third_party/gem
 ```
-
-## Citation
-
-If you find ORBIT useful in your research, please cite:
-
-```bibtex
-@article{lin2026scaling,
-  title={Scaling In-Context Online Learning Capability of LLMs via Cross-Episode Meta-RL},
-  author={Lin, Xiaofeng and Zhu, Sirou and Chen, Yilei and Chen, Mingyu and Sang, Hejian and Paschalidis, Ioannis and Wang, Zhipeng and Pacchiano, Aldo and Zhang, Xuezhou},
-  journal={arXiv preprint arXiv:2602.04089},
-  year={2026}
-}
-```
-
 
 ## Training
 
@@ -189,3 +179,17 @@ Logged metrics:
 - `episode/success_rate`: 1.0 if episode succeeded, 0.0 otherwise
 - `episode/episode_length`: number of steps taken
 - `episode/truncated`: 1.0 if trajectory was terminated early by execution engine
+
+## Citation
+
+If you find ORBIT useful in your research, please cite:
+
+```bibtex
+@article{lin2026scaling,
+  title={Scaling In-Context Online Learning Capability of LLMs via Cross-Episode Meta-RL},
+  author={Lin, Xiaofeng and Zhu, Sirou and Chen, Yilei and Chen, Mingyu and Sang, Hejian and Paschalidis, Ioannis and Wang, Zhipeng and Pacchiano, Aldo and Zhang, Xuezhou},
+  journal={arXiv preprint arXiv:2602.04089},
+  year={2026}
+}
+```
+
