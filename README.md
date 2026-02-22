@@ -1,5 +1,11 @@
 # Scaling In-Context Online Learning Capability of LLMs via Cross-Episode Meta-RL
 
+<p align="center">
+  <a href="https://arxiv.org/abs/2602.04089">
+    <img src="https://img.shields.io/badge/arXiv-View%20Paper-b31b1b.svg?logo=arxiv" alt="arXiv">
+  </a>
+</p>
+
 Large language models excel when all task-relevant information is available upfront, but many real-world decision-making problems are inherently online—requiring interaction, delayed feedback, and exploration over time. While in-context learning enables adaptation without weight updates, existing LLMs often struggle to reliably learn from interaction experience alone.
 
 ORBIT is a multi-task, multi-episode meta–reinforcement learning framework that trains LLMs to learn from interaction in context. After meta-training, a relatively small open-source model (Qwen-14B) demonstrates strong in-context online learning on unseen environments, matching GPT-5.2 and substantially outperforming standard RL fine-tuning. Scaling results show consistent gains with model size, highlighting the potential of learn-at-inference-time decision-making agents.
@@ -14,6 +20,7 @@ This repository contains the official code, environments, and scripts to reprodu
   - Multi-task training (single-episode vs multi-episode)
 - Evaluation (OpenAI)
 - Outputs and metrics
+- Citation
 
 ## Installation (conda env: `orbit`)
 
@@ -36,7 +43,6 @@ uv pip install -e .[verl]
 cd ../..
 uv pip install -e third_party/gem
 ```
-
 
 ## Training
 
@@ -173,3 +179,17 @@ Logged metrics:
 - `episode/success_rate`: 1.0 if episode succeeded, 0.0 otherwise
 - `episode/episode_length`: number of steps taken
 - `episode/truncated`: 1.0 if trajectory was terminated early by execution engine
+
+## Citation
+
+If you find ORBIT useful in your research, please cite:
+
+```bibtex
+@article{lin2026scaling,
+  title={Scaling In-Context Online Learning Capability of LLMs via Cross-Episode Meta-RL},
+  author={Lin, Xiaofeng and Zhu, Sirou and Chen, Yilei and Chen, Mingyu and Sang, Hejian and Paschalidis, Ioannis and Wang, Zhipeng and Pacchiano, Aldo and Zhang, Xuezhou},
+  journal={arXiv preprint arXiv:2602.04089},
+  year={2026}
+}
+```
+
