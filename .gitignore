@@ -9,3 +9,6 @@ results/
 .nfs*
 plots/
 *.png
+AGENTS.md
+.codex/
+idea.pdf
