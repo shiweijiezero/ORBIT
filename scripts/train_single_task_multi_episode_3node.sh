@@ -8,7 +8,7 @@ set -x
 export VLLM_ATTENTION_BACKEND=FLASH_ATTN
 export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:False"
 export VLLM_USE_V1=1
-export RAY_PORT=${RAY_PORT:-6379}
+export RAY_PORT=${RAY_PORT:-16379}
 
 NNODES=3
 N_GPUS_PER_NODE=8
@@ -16,7 +16,7 @@ N_GPUS_PER_NODE=8
 ENV_ID=game:Minesweeper-v0-only-reveal
 TOTAL_STEP_CAP=21
 MAX_TURNS_PER_EPISODE=7
-MODEL_PATH=Qwen/Qwen3-1.7B
+MODEL_PATH=Qwen/Qwen3-4B
 
 MODEL_NAME=$(basename "$MODEL_PATH" | tr '[:upper:]' '[:lower:]')
 ENV_NAME=$(echo "$ENV_ID" | cut -d: -f2 | tr '[:upper:]' '[:lower:]' | tr '_' '-')

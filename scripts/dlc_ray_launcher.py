@@ -11,7 +11,6 @@ Usage:
 from __future__ import annotations
 
 import os
-import signal
 import subprocess
 import sys
 import time
@@ -24,7 +23,7 @@ def main() -> None:
     world_size = int(os.environ["WORLD_SIZE"])
     master_addr = os.environ["MASTER_ADDR"]
     # Separate port for Ray, avoid collision with torch.distributed MASTER_PORT
-    ray_port = os.environ.get("RAY_PORT", "6379")
+    ray_port = os.environ.get("RAY_PORT", "16379")
 
     print(f"[DLC] rank={rank}, world_size={world_size}, "
           f"master_addr={master_addr}, ray_port={ray_port}")
@@ -37,39 +36,38 @@ def main() -> None:
             shell=True, check=True,
         )
     else:
-        print(f"[DLC] Worker {rank} waiting 20s for head...")
-        time.sleep(20)
         head_addr = f"{master_addr}:{ray_port}"
-        print(f"[DLC] Starting Ray worker, connecting to {head_addr}")
-        subprocess.run(
-            f"ray start --address={head_addr}",
-            shell=True, check=True,
-        )
+        for i in range(30):
+            print(f"[DLC] Worker {rank} connecting to {head_addr} (attempt {i + 1})")
+            ret = subprocess.run(f"ray start --address={head_addr}", shell=True)
+            if ret.returncode == 0:
+                break
+            time.sleep(10)
+        else:
+            print("[DLC] ERROR: Worker failed to connect to head!")
+            sys.exit(1)
 
     # ── Head waits for all nodes ────────────────────────────────────────────
     if rank == 0:
         print(f"[DLC] Waiting for {world_size} nodes...")
+        ray.init(address="auto")
         for attempt in range(1, 121):
-            try:
-                ray.init(address="auto", ignore_reinit_error=True)
-                alive = [n for n in ray.nodes() if n["Alive"]]
-                ray.shutdown()
-                if len(alive) >= world_size:
-                    print(f"[DLC] Ray cluster ready: {len(alive)}/{world_size} nodes.")
-                    break
-                print(f"[DLC] Attempt {attempt}: {len(alive)}/{world_size} nodes...")
-            except Exception as e:
-                print(f"[DLC] Attempt {attempt}: {e}")
+            alive = [n for n in ray.nodes() if n["Alive"]]
+            if len(alive) >= world_size:
+                print(f"[DLC] Ray cluster ready: {len(alive)}/{world_size} nodes.")
+                break
+            print(f"[DLC] Attempt {attempt}: {len(alive)}/{world_size} nodes...")
             time.sleep(10)
         else:
             print("[DLC] ERROR: Timed out waiting for Ray cluster!")
             sys.exit(1)
+        ray.shutdown()
 
     # ── Workers sleep forever (DLC kills all containers on task end) ────────
     if rank != 0:
         print(f"[DLC] Worker {rank} standing by.")
-        signal.pause()
-        return
+        while True:
+            time.sleep(3600)
 
     # ── Head: run training command (everything after "--") ──────────────────
     if "--" not in sys.argv:
@@ -79,6 +77,7 @@ def main() -> None:
     cmd = sys.argv[sys.argv.index("--") + 1:]
     print(f"[DLC] Running: {' '.join(cmd)}")
     result = subprocess.run(cmd)
+    subprocess.run("ray stop", shell=True)
     sys.exit(result.returncode)
 
 
